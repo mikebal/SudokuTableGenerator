@@ -10,6 +10,7 @@ public class TableGenerator {
     {
         int gameBoardInstance[][] = new int[9][9];
         populateTable(gameBoardInstance, 81);
+        printTable(gameBoardInstance);
         return gameBoardInstance;
 
     }
@@ -20,6 +21,7 @@ public class TableGenerator {
             System.out.println("**************************************  " + remaining);
             return true;
         }
+        System.out.println(remaining);
         int subtractedREMAINING = remaining - 1;
         ArrayList<Integer> possibilities = new ArrayList<Integer>();
         boolean solved = false;
@@ -29,42 +31,36 @@ public class TableGenerator {
             int value1 = possibilities.get(0);
             gameBoard[cellToPopulate[0]][cellToPopulate[1]] =  value1;
             possibilities.remove(0);
-            System.out.println("**************************************  " + remaining);
+          //  System.out.println("Call 1");
             solved = populateTable(gameBoard, subtractedREMAINING);
-        }
-        else {
-            gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-            return false;
-        }
+            if (!solved) {
 
-        if (!solved) {
-            
-  //          gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-            for (int index = 0; index < possibilities.size(); index++) {
-                int value = possibilities.get(0);
-                gameBoard[cellToPopulate[0]][cellToPopulate[1]] =value;
-                possibilities.remove(0);
-                if (populateTable(gameBoard, subtractedREMAINING)) {
-                    solved = true;
-                    break;
+                //          gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
+                for (int index = 0; index < possibilities.size(); index++) {
+                    int value = possibilities.get(index);
+                    gameBoard[cellToPopulate[0]][cellToPopulate[1]] =value;
+                    //possibilities.remove(0);
+          //          System.out.println("call 2");
+                    if (populateTable(gameBoard, subtractedREMAINING)) {
+                        solved = true;
+                        break;
+                    }
+                }
+                if(!solved) {
+                    gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
+          //          System.out.println("return 3 " + possibilities.size()) ;
+                    return false;
                 }
             }
-          //  return false;
         }
-
-
-        //else
-      //  gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-        if(!solved) {
-            gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-            return false;
+        else {
+            if(!solved)
+                gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
+         //   System.out.println("return 4 " + possibilities.size());
+            return solved;
         }
-        else
-            return true;
-       // if(!solved)
-       //    return false;
-       // else
-        //   return true;
+        gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
+        return false;
     }
 
     /*    if(fillSingleCell(gameBoard, cellToPopulate[0],cellToPopulate[1], possibilities))
