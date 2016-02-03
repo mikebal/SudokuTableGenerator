@@ -1,3 +1,5 @@
+import org.omg.CORBA.INTERNAL;
+
 /**
  * Created by Michael on 2/2/2016.
  * The purpose of this class is to determine if a given random int (1-9) can be inserted into the game board at a given location
@@ -40,8 +42,8 @@ public class ValidLineManager
     private boolean isBoxValid(int gameBoard[][], final int X_COORDINATE, final int Y_COORDINATE, final int newValue){
         int line[] = new int[9];
         int index = 0;
-        int x_boxStart = X_COORDINATE % 3;
-        int y_boxStart = Y_COORDINATE % 3;
+        int x_boxStart = Math.floorDiv(X_COORDINATE,3) * 3;// / 3;
+        int y_boxStart = Math.floorDiv(Y_COORDINATE,3) * 3;
 
         for(int y_pos = 0; y_pos < 3; y_pos++){
             for(int x_pos = 0; x_pos < 3; x_pos++){
@@ -49,6 +51,10 @@ public class ValidLineManager
                 index++;
             }
         }
+       // System.out.print("Box possibilities: ");
+       // for(int i = 0; i < 9; i++)
+       //     System.out.print(line[i] + ",");
+       // System.out.println("");
         return isLineValid(line, newValue);
     }
 

@@ -17,86 +17,25 @@ public class TableGenerator {
 
     private boolean populateTable(int gameBoard[][], int remaining) {
 
-        if (remaining == 1) { // if the whole table has been populated
-            System.out.println("**************************************  " + remaining);
+        if (remaining == 0) // if the whole table has been populated
             return true;
-        }
-        System.out.println(remaining);
-        int subtractedREMAINING = remaining - 1;
+
         ArrayList<Integer> possibilities = new ArrayList<Integer>();
-        boolean solved = false;
         int cellToPopulate[] = getRandomEmptyCellToProcess(gameBoard);
-
-        if (fillSingleCell(gameBoard, cellToPopulate[0], cellToPopulate[1], possibilities)) { // if we can put something here
-            int value1 = possibilities.get(0);
-            gameBoard[cellToPopulate[0]][cellToPopulate[1]] =  value1;
-            possibilities.remove(0);
-          //  System.out.println("Call 1");
-            solved = populateTable(gameBoard, subtractedREMAINING);
-            if (!solved) {
-
-                //          gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-                for (int index = 0; index < possibilities.size(); index++) {
-                    int value = possibilities.get(index);
-                    gameBoard[cellToPopulate[0]][cellToPopulate[1]] =value;
-                    //possibilities.remove(0);
-          //          System.out.println("call 2");
-                    if (populateTable(gameBoard, subtractedREMAINING)) {
-                        solved = true;
-                        break;
-                    }
-                }
-                if(!solved) {
-                    gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-          //          System.out.println("return 3 " + possibilities.size()) ;
-                    return false;
+         if(fillSingleCell(gameBoard, cellToPopulate[0], cellToPopulate[1], possibilities))
+        { // if we can put something here
+           for (int index = 0; index < possibilities.size(); index++)
+           {
+                gameBoard[cellToPopulate[0]][cellToPopulate[1]] = possibilities.get(index);
+                if (populateTable(gameBoard, remaining - 1)) {
+                    return true;
                 }
             }
-        }
-        else {
-            if(!solved)
-                gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-         //   System.out.println("return 4 " + possibilities.size());
-            return solved;
         }
         gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
         return false;
     }
 
-    /*    if(fillSingleCell(gameBoard, cellToPopulate[0],cellToPopulate[1], possibilities))
-        {
-            System.out.println("Working on cell: [" + cellToPopulate[0] + "," + cellToPopulate[1] +"]      Remaining: " + remaining + "                 " + possibilities.get(0)  );
-            printTable(gameBoard);
-            gameBoard[cellToPopulate[0]][cellToPopulate[1]] = possibilities.get(0);
-            possibilities.remove(0);
-            if (!populateTable(gameBoard, remaining--)) {
-                for(int index = 0; index < possibilities.size(); index++)
-                {
-                    System.out.println("Working on cell: [" + cellToPopulate[0] + "," + cellToPopulate[1] +"]      Remaining: " + remaining  + "                 " +  possibilities.get(0));
-                    gameBoard[cellToPopulate[0]][cellToPopulate[1]] = possibilities.get(0);
-                    possibilities.remove(0);
-                    if(populateTable(gameBoard, remaining--)) {
-                        solved = true;
-                        break;
-                    }
-                }
-
-            }
-
-        }
-        else{
-            gameBoard[cellToPopulate[0]][cellToPopulate[1]] = 0;
-            return false;
-        }
-
-        populateTable(gameBoard, remaining);
-        if(solved)
-           return true;
-        else
-            return false;*/
-      //  System.out.println("Remaining: " + remaining + " [" + cellToPopulate[0] + "," + cellToPopulate[1] + "]");
-     //   populateTable(gameBoard, remaining-1);
-       // return true;
 
     private void printTable(int gameBoard[][]) {
         for (int y = 0; y < 9; y++){
@@ -107,7 +46,20 @@ public class TableGenerator {
       }
     }
     private int[] getRandomEmptyCellToProcess(int gameBoard[][]){
-        Random rand = new Random();
+        int x_and_y[] = new int[2];
+
+        for(int y = 0; y < 9; y++)
+            for (int x = 0; x < 9; x++)
+            {
+                if(gameBoard[x][y] == 0)
+                {
+                    x_and_y[0] = x;
+                    x_and_y[1] = y;
+                  //  System.out.println("Looking at [" + x +"," + y +"]");
+                    return x_and_y;
+                }
+            }
+        /*  Random rand = new Random();
         int targetLocation[] = new int[2];
         final int X_COORDINATE = 0;
         final int Y_COORDINATE = 1;
@@ -127,7 +79,8 @@ public class TableGenerator {
             }
             target = gameBoard[targetLocation[X_COORDINATE]][targetLocation[Y_COORDINATE]];
         }
-        return targetLocation;
+        return targetLocation;*/
+        return x_and_y;
     }
 
     private boolean fillSingleCell(int gameBoard[][], final int X_COORDINATE, final int Y_COORDINATE, ArrayList<Integer> possibilities){
